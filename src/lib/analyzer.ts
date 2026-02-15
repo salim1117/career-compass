@@ -142,7 +142,7 @@ export function calculateBaseScore(skills: ExtractedSkills, company: string, rol
 export function calculateFinalScore(baseScore: number, confidenceMap: Record<string, "know" | "practice">): number {
   let delta = 0;
   for (const val of Object.values(confidenceMap)) {
-    delta += val === "know" ? 2 : -2;
+    if (val === "know") delta += 2;
   }
   return Math.max(0, Math.min(100, baseScore + delta));
 }
