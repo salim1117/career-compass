@@ -54,6 +54,7 @@ export default function Dashboard() {
           <CardContent><CircularProgress value={72} /></CardContent>
         </Card>
 
+
         {/* Skill Breakdown */}
         <Card className="shadow-none border border-border">
           <CardHeader><CardTitle className="text-lg">Skill Breakdown</CardTitle></CardHeader>
@@ -71,7 +72,7 @@ export default function Dashboard() {
 
         {/* Continue Practice */}
         <Card className="shadow-none border border-border">
-          <CardHeader><CardTitle className="text-lg">Continue Practice</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-lg flex items-center gap-2"><span className="inline-block w-2 h-2 rounded-full bg-highlight" /> Continue Practice</CardTitle></CardHeader>
           <CardContent className="space-y-4">
             <p className="font-medium">Dynamic Programming</p>
             <div className="flex items-center gap-3">
@@ -84,7 +85,7 @@ export default function Dashboard() {
 
         {/* Weekly Goals */}
         <Card className="shadow-none border border-border">
-          <CardHeader><CardTitle className="text-lg">Weekly Goals</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-lg flex items-center gap-2"><span className="inline-block w-2 h-2 rounded-full bg-success" /> Weekly Goals</CardTitle></CardHeader>
           <CardContent className="space-y-4">
             <div>
               <div className="flex justify-between text-sm mb-1">
@@ -96,7 +97,7 @@ export default function Dashboard() {
             <div className="flex gap-2">
               {days.map((d, i) => (
                 <div key={d} className="flex flex-col items-center gap-1">
-                  <div className={`w-6 h-6 rounded-full border ${activeDays[i] ? "bg-primary border-primary" : "border-border"}`} />
+                  <div className={`w-6 h-6 rounded-full border ${activeDays[i] ? "bg-success border-success" : "border-border"}`} />
                   <span className="text-[10px] text-muted-foreground">{d}</span>
                 </div>
               ))}
@@ -106,7 +107,7 @@ export default function Dashboard() {
 
         {/* Upcoming Assessments */}
         <Card className="shadow-none border border-border lg:col-span-2">
-          <CardHeader><CardTitle className="text-lg">Upcoming Assessments</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-lg flex items-center gap-2"><span className="inline-block w-2 h-2 rounded-full bg-info" /> Upcoming Assessments</CardTitle></CardHeader>
           <CardContent>
             <ul className="space-y-3">
               {assessments.map((a) => (
