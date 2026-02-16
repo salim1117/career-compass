@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Clock, Target, Award, CalendarDays } from "lucide-react";
 
 const assessments = [
-  { title: "DSA Mock Test", date: "Tomorrow, 10:00 AM", duration: "90 min", difficulty: "Medium", icon: Target, color: "bg-info/10 text-info" },
-  { title: "System Design Review", date: "Wed, 2:00 PM", duration: "60 min", difficulty: "Hard", icon: Award, color: "bg-highlight/10 text-highlight" },
-  { title: "HR Interview Prep", date: "Friday, 11:00 AM", duration: "45 min", difficulty: "Easy", icon: CalendarDays, color: "bg-success/10 text-success" },
+  { title: "DSA Mock Test", date: "Tomorrow, 10:00 AM", duration: "90 min", difficulty: "Medium", icon: Target, color: "text-info", accent: "border-l-info" },
+  { title: "System Design Review", date: "Wed, 2:00 PM", duration: "60 min", difficulty: "Hard", icon: Award, color: "text-highlight", accent: "border-l-highlight" },
+  { title: "HR Interview Prep", date: "Friday, 11:00 AM", duration: "45 min", difficulty: "Easy", icon: CalendarDays, color: "text-success", accent: "border-l-success" },
 ];
 
 const diffColor: Record<string, string> = {
@@ -23,9 +23,9 @@ export default function Assessments() {
 
       <div className="space-y-4">
         {assessments.map((a) => (
-          <Card key={a.title} className="shadow-none border border-border hover:border-primary/30 transition-colors duration-150">
+          <Card key={a.title} className={`card-premium border-l-4 ${a.accent}`}>
             <CardContent className="py-5 flex items-center gap-4">
-              <div className={`h-12 w-12 rounded-lg flex items-center justify-center shrink-0 ${a.color}`}>
+              <div className={`h-12 w-12 rounded-lg flex items-center justify-center shrink-0 bg-muted ${a.color}`}>
                 <a.icon className="h-6 w-6" />
               </div>
               <div className="flex-1 min-w-0">
@@ -42,7 +42,7 @@ export default function Assessments() {
         ))}
       </div>
 
-      <Card className="mt-6 shadow-none border border-border bg-accent/50">
+      <Card className="mt-6 card-premium bg-accent/50">
         <CardContent className="py-6 text-center">
           <p className="text-sm text-muted-foreground">Full timed assessments with scoring will be available soon.</p>
         </CardContent>

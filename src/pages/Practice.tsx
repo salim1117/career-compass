@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Code, Zap, Brain, Trophy } from "lucide-react";
 
 const topics = [
-  { icon: Code, title: "Arrays & Strings", total: 25, done: 8, color: "bg-primary/10 text-primary" },
-  { icon: Brain, title: "Dynamic Programming", total: 20, done: 3, color: "bg-highlight/10 text-highlight" },
-  { icon: Zap, title: "Trees & Graphs", total: 18, done: 12, color: "bg-info/10 text-info" },
-  { icon: Trophy, title: "System Design", total: 10, done: 6, color: "bg-success/10 text-success" },
+  { icon: Code, title: "Arrays & Strings", total: 25, done: 8, color: "text-primary", accent: "border-l-primary" },
+  { icon: Brain, title: "Dynamic Programming", total: 20, done: 3, color: "text-highlight", accent: "border-l-highlight" },
+  { icon: Zap, title: "Trees & Graphs", total: 18, done: 12, color: "text-info", accent: "border-l-info" },
+  { icon: Trophy, title: "System Design", total: 10, done: 6, color: "text-success", accent: "border-l-success" },
 ];
 
 export default function Practice() {
@@ -21,10 +21,10 @@ export default function Practice() {
         {topics.map((t) => {
           const pct = Math.round((t.done / t.total) * 100);
           return (
-            <Card key={t.title} className="shadow-none border border-border hover:border-primary/30 transition-colors duration-150">
+            <Card key={t.title} className={`card-premium border-l-4 ${t.accent}`}>
               <CardContent className="pt-6 space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${t.color}`}>
+                  <div className={`h-10 w-10 rounded-lg flex items-center justify-center bg-muted ${t.color}`}>
                     <t.icon className="h-5 w-5" />
                   </div>
                   <div className="flex-1">
@@ -41,7 +41,7 @@ export default function Practice() {
         })}
       </div>
 
-      <Card className="mt-6 shadow-none border border-border bg-accent/50">
+      <Card className="mt-6 card-premium bg-accent/50">
         <CardContent className="py-6 text-center">
           <p className="text-sm text-muted-foreground">More practice categories coming soon — SQL, OS, Networks, and more.</p>
         </CardContent>

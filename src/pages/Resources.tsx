@@ -3,12 +3,12 @@ import { Badge } from "@/components/ui/badge";
 import { BookOpen, Video, FileText, ExternalLink } from "lucide-react";
 
 const resources = [
-  { icon: BookOpen, title: "DSA Fundamentals", desc: "Master arrays, trees, graphs, and dynamic programming.", tags: ["Beginner", "Core"], color: "bg-primary/10 text-primary" },
-  { icon: Video, title: "System Design Patterns", desc: "Learn scalable architecture patterns used by top companies.", tags: ["Advanced", "Design"], color: "bg-highlight/10 text-highlight" },
-  { icon: FileText, title: "Resume Building Guide", desc: "Craft an ATS-friendly resume that stands out to recruiters.", tags: ["Essential", "Career"], color: "bg-success/10 text-success" },
-  { icon: BookOpen, title: "Behavioral Interview Prep", desc: "Frameworks for answering HR and managerial round questions.", tags: ["HR", "Communication"], color: "bg-info/10 text-info" },
-  { icon: Video, title: "SQL & Database Mastery", desc: "From basic queries to indexing, joins, and optimization.", tags: ["Data", "Backend"], color: "bg-warning/10 text-warning" },
-  { icon: FileText, title: "Aptitude & Reasoning", desc: "Practice quantitative, logical, and verbal reasoning.", tags: ["Aptitude", "Basics"], color: "bg-primary/10 text-primary" },
+  { icon: BookOpen, title: "DSA Fundamentals", desc: "Master arrays, trees, graphs, and dynamic programming.", tags: ["Beginner", "Core"], color: "text-primary", accent: "border-l-primary" },
+  { icon: Video, title: "System Design Patterns", desc: "Learn scalable architecture patterns used by top companies.", tags: ["Advanced", "Design"], color: "text-highlight", accent: "border-l-highlight" },
+  { icon: FileText, title: "Resume Building Guide", desc: "Craft an ATS-friendly resume that stands out to recruiters.", tags: ["Essential", "Career"], color: "text-success", accent: "border-l-success" },
+  { icon: BookOpen, title: "Behavioral Interview Prep", desc: "Frameworks for answering HR and managerial round questions.", tags: ["HR", "Communication"], color: "text-info", accent: "border-l-info" },
+  { icon: Video, title: "SQL & Database Mastery", desc: "From basic queries to indexing, joins, and optimization.", tags: ["Data", "Backend"], color: "text-warning", accent: "border-l-warning" },
+  { icon: FileText, title: "Aptitude & Reasoning", desc: "Practice quantitative, logical, and verbal reasoning.", tags: ["Aptitude", "Basics"], color: "text-primary", accent: "border-l-primary" },
 ];
 
 export default function Resources() {
@@ -19,10 +19,10 @@ export default function Resources() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {resources.map((r) => (
-          <Card key={r.title} className="shadow-none border border-border hover:border-primary/30 transition-colors duration-150 cursor-pointer group">
+          <Card key={r.title} className={`card-premium border-l-4 ${r.accent} cursor-pointer group`}>
             <CardContent className="pt-6 space-y-3">
               <div className="flex items-start gap-3">
-                <div className={`h-10 w-10 rounded-lg flex items-center justify-center shrink-0 ${r.color}`}>
+                <div className={`h-10 w-10 rounded-lg flex items-center justify-center shrink-0 bg-muted ${r.color}`}>
                   <r.icon className="h-5 w-5" />
                 </div>
                 <div className="flex-1">

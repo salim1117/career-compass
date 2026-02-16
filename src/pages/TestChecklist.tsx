@@ -4,6 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { getTestChecklist, saveTestChecklist } from "@/lib/storage";
+import { CheckSquare } from "lucide-react";
 
 const TEST_ITEMS = [
   { label: "JD required validation works", hint: "Try clicking Analyze with an empty textarea." },
@@ -47,23 +48,24 @@ export default function TestChecklist() {
       <p className="text-muted-foreground mb-6">Verify each item before shipping.</p>
 
       <div className="flex items-center justify-between mb-6">
-        <Badge variant={passed === 10 ? "default" : "secondary"} className="text-sm">
+        <Badge variant={passed === 10 ? "default" : "secondary"} className="text-sm gap-1.5">
+          <CheckSquare className="h-3.5 w-3.5" />
           Tests Passed: {passed} / 10
         </Badge>
         <Button variant="outline" size="sm" onClick={reset}>Reset Checklist</Button>
       </div>
 
       {passed < 10 && (
-        <p className="text-sm text-warning mb-4">Fix issues before shipping.</p>
+        <p className="text-sm text-warning mb-4 font-medium">⚠ Fix issues before shipping.</p>
       )}
 
-      <Card className="shadow-none border border-border">
+      <Card className="card-premium">
         <CardContent className="py-4 space-y-4">
           {TEST_ITEMS.map((item, i) => (
-            <div key={i} className="flex items-start gap-3">
+            <div key={i} className={`flex items-start gap-3 p-2 rounded-md transition-colors ${items[i] ? "bg-success/5" : ""}`}>
               <Checkbox checked={items[i]} onCheckedChange={() => toggle(i)} className="mt-0.5" />
               <div>
-                <p className="text-sm font-medium">{item.label}</p>
+                <p className={`text-sm font-medium ${items[i] ? "text-success" : ""}`}>{item.label}</p>
                 <p className="text-xs text-muted-foreground">{item.hint}</p>
               </div>
             </div>
