@@ -1,106 +1,123 @@
 
 
-# Placement Readiness Platform — Implementation Plan
+# Premium UI Enhancement + Dark Mode + Edge Case Hardening
 
 ## Overview
-A premium SaaS-style placement preparation tool that analyzes job descriptions, extracts skills, generates study plans, and tracks readiness — all client-side with localStorage persistence.
+Upgrade the visual design to feel more premium with richer color accents, add a fully functional dark mode toggle, and ensure all 10 test checklist edge cases pass cleanly.
 
 ---
 
-## Phase 1: Design System & App Shell
+## 1. Dark Mode Toggle
 
-### Design System
-- Off-white background (#F7F6F3), deep red accent (#8B0000), dark text (#111111)
-- Serif headings, clean sans-serif body (16-18px, max 720px)
-- Consistent 8/16/24/40/64px spacing scale
-- No gradients, glassmorphism, or visual noise
-- Flat, calm component styling — subtle borders, no drop shadows
+- Add a `ThemeProvider` using `next-themes` (already installed) wrapping the app in `App.tsx`
+- Add a Sun/Moon toggle button in `TopBar.tsx` (top-right area, before the status badge)
+- The dark mode CSS variables are already defined in `index.css` -- just need the toggle mechanism
 
-### App Shell & Navigation
-- **Top Bar**: Project name, step progress indicator (Step X/Y), status badge (Not Started → In Progress → Shipped)
-- **Sidebar**: Dashboard, Practice, Assessments, Resources, Profile with lucide icons
-- **Landing Page**: Hero ("Ace Your Placement"), 3-column feature grid (Practice Problems, Mock Interviews, Track Progress), footer
-- Routes for all pages with placeholder content
+### Files changed
+- `src/App.tsx` -- wrap with `ThemeProvider`
+- `src/components/layout/TopBar.tsx` -- add theme toggle button
 
 ---
 
-## Phase 2: Skill Assessment Dashboard
+## 2. Premium UI Polish (All Pages)
 
-- **Overall Readiness**: Circular SVG progress indicator (72/100)
-- **Skill Breakdown**: Radar chart (recharts) with 5 axes — DSA, System Design, Communication, Resume, Aptitude
-- **Continue Practice**: Last topic card with progress bar and Continue button
-- **Weekly Goals**: Problems solved progress (12/20), 7-day activity circles
-- **Upcoming Assessments**: 3 upcoming items with dates/times
-- Responsive 2-column desktop / single-column mobile layout
+### Landing Page (`Landing.tsx`)
+- Add a subtle gradient hero background (very light, not flashy -- e.g., a soft radial glow behind the heading)
+- Add a colored accent line under the hero heading
+- Improve feature cards with larger icons and subtle left-border color accents
+- Add a "Trusted by students at top companies" social proof row
 
----
+### Dashboard (`Dashboard.tsx`)
+- Add colored accent backgrounds to stat cards (soft tints matching their theme color)
+- Improve the circular progress ring with a gradient stroke effect
+- Add a welcome banner card at the top with user greeting and quick-action buttons ("Analyze a JD", "View History")
+- Style the radar chart with better fill colors
 
-## Phase 3: JD Analyzer & History
+### Analyze Page (`Analyze.tsx`)
+- Add a subtle info card above the form explaining "What happens when you analyze"
+- Improve form styling with better label colors and input focus states
+- Add a sample JD quick-paste button for testing convenience
 
-### Heuristic Skill Extraction
-- Keyword detection across 6 categories: Core CS, Languages, Web, Data, Cloud/DevOps, Testing
-- Fallback to "General fresher stack" if no skills detected
-- Skills displayed as grouped tags
+### Results Page (`Results.tsx`)
+- Add colored category headers for skill groups
+- Improve the skill badge toggles with clearer visual states (green checkmark for "know", amber question for "practice")
+- Add section dividers with subtle colored accent lines
+- Improve the "Action Next" card with a gradient accent border
 
-### Generated Outputs
-- **Round-wise checklist** (4 rounds: Aptitude, DSA+Core CS, Tech+Projects, HR) with 5-8 items per round adapted to detected skills
-- **7-day study plan** adapted to detected stack
-- **10 likely interview questions** specific to detected skills
-- **Readiness score** (0-100): Base 35 + category bonuses + company/role/length bonuses
+### History Page (`History.tsx`)
+- Add score color coding (green for 70+, amber for 40-69, red for below 40)
+- Add a subtle icon and better date formatting
+- Add delete entry functionality
 
-### History System
-- Every analysis saved to localStorage with full data
-- History page listing entries by date, company, role, score
-- Click to reopen any saved analysis
+### Practice, Assessments, Resources, Profile Pages
+- Add subtle gradient accent strips at the top of cards
+- Improve badge color contrast for dark mode compatibility
+- Ensure all colored elements use CSS variables for dark mode support
 
----
+### Sidebar (`AppSidebar.tsx`)
+- Add colored icon accents for each nav item (matching their page theme)
+- Improve active state styling with a left border accent
+- Add a subtle separator between main nav and utility nav (Test Checklist, Ship)
 
-## Phase 4: Interactive Results & Exports
-
-- **Skill self-assessment toggles**: Each skill tag toggleable between "I know this" / "Need practice"
-- **Live readiness score**: Updates in real-time based on toggles (±2 per skill, clamped 0-100)
-- **Export buttons**: Copy 7-day plan, Copy checklist, Copy questions, Download all as TXT
-- **Action Next box**: Top 3 weak skills + "Start Day 1 plan now" suggestion
-- All toggle states persist in localStorage per history entry
-
----
-
-## Phase 5: Company Intel & Round Mapping
-
-- **Company Intel card**: Industry guess, size category (Startup/Mid/Enterprise), typical hiring focus
-- Known companies (Amazon, Infosys, TCS, etc.) mapped to Enterprise; unknown defaults to Startup
-- **Round Mapping Engine**: Dynamic interview round timeline based on company size + detected skills
-- Enterprise → structured 4-round flow; Startup → practical 3-round flow
-- "Why this round matters" explanation under each round
-- "Demo Mode" disclaimer note
+### TopBar (`TopBar.tsx`)
+- Add the dark mode toggle
+- Improve status badge with animated pulse for "In Progress"
+- Add a subtle bottom shadow for depth
 
 ---
 
-## Phase 6: Data Hardening & Validation
+## 3. Edge Case Hardening
 
-- JD textarea required; warning for JDs under 200 characters
-- Strict schema for every analysis entry — no undefined, no missing keys
-- Fallback skills (Communication, Problem solving, Basic coding, Projects) when nothing detected
-- Score stability: baseScore set once, finalScore derived from toggles
-- Corrupted localStorage entries gracefully skipped with user message
+All 10 test cases already pass based on current code, but we will add extra safety:
+
+### Validation (`Analyze.tsx`)
+- Ensure empty JD shows clear red error message (already works)
+- Ensure short JD (<200 chars) shows amber warning (already works)
+- Add `aria-invalid` attributes for accessibility
+
+### Data Resilience (`storage.ts`)
+- Add a try-catch wrapper in `getHistory()` that filters out entries missing required keys (already exists)
+- Add a visible toast notification when a corrupted entry is skipped
+
+### Score Capping (`analyzer.ts`)
+- Already uses `Math.max(0, Math.min(100, ...))` -- verified working
+
+### Export Buttons (`Results.tsx`)
+- Already copy correct content -- verified working
+- Add toast confirmation with content preview
 
 ---
 
-## Phase 7: Test Checklist & Ship Lock
+## 4. CSS/Theme Updates (`index.css`, `tailwind.config.ts`)
 
-- Built-in 10-item test checklist with checkboxes and "How to test" hints
-- "Tests Passed: X/10" counter with warning if incomplete
-- Ship step locked until all 10 items checked
-- Reset checklist button
-- Checklist state persisted in localStorage
+- Ensure all new accent colors have proper dark mode equivalents
+- Add utility classes for premium card styles (`.card-premium` with subtle hover elevation)
+- Add a smooth transition on `background-color` and `color` for dark mode switching
 
 ---
 
-## Phase 8: Proof & Submission System
+## Technical Details
 
-- **Proof page** with step completion overview (8 steps status)
-- **Artifact inputs**: Lovable Project Link, GitHub Repo, Deployed URL (all URL-validated)
-- **"Copy Final Submission"** button producing formatted text export
-- **Shipped status** only when: all 8 steps complete + 10 checklist items passed + 3 proof links provided
-- Completion message displayed on achieving Shipped status
+### New dependencies: None (next-themes already installed)
+
+### Files to create:
+- `src/components/ThemeToggle.tsx` -- Sun/Moon toggle component
+
+### Files to modify:
+- `src/App.tsx` -- ThemeProvider wrapper
+- `src/index.css` -- dark mode transition, premium utility classes
+- `src/components/layout/TopBar.tsx` -- theme toggle + polish
+- `src/components/layout/AppSidebar.tsx` -- colored icons + separator
+- `src/components/layout/DashboardLayout.tsx` -- minor layout tweaks
+- `src/pages/Landing.tsx` -- premium hero + social proof
+- `src/pages/Dashboard.tsx` -- welcome banner + card accents
+- `src/pages/Analyze.tsx` -- info card + sample JD button
+- `src/pages/Results.tsx` -- colored sections + better toggles
+- `src/pages/History.tsx` -- score colors + delete
+- `src/pages/Practice.tsx` -- card polish
+- `src/pages/Assessments.tsx` -- card polish
+- `src/pages/Resources.tsx` -- card polish
+- `src/pages/Profile.tsx` -- card polish
+- `src/pages/TestChecklist.tsx` -- minor polish
+- `src/pages/Proof.tsx` -- minor polish
 
