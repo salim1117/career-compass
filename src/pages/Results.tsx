@@ -6,8 +6,28 @@ import { Button } from "@/components/ui/button";
 import { getEntryById, saveToHistory } from "@/lib/storage";
 import { calculateFinalScore, getAllSkills } from "@/lib/analyzer";
 import type { AnalysisEntry } from "@/lib/types";
-import { Copy, Download, Building2 } from "lucide-react";
+import { Copy, Download, Building2, CheckCircle, HelpCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+
+const CATEGORY_COLORS: Record<string, string> = {
+  coreCS: "text-primary",
+  languages: "text-info",
+  web: "text-highlight",
+  data: "text-success",
+  cloud: "text-warning",
+  testing: "text-info",
+  other: "text-muted-foreground",
+};
+
+const CATEGORY_LABELS: Record<string, string> = {
+  coreCS: "Core CS",
+  languages: "Languages",
+  web: "Web & Frameworks",
+  data: "Data & Databases",
+  cloud: "Cloud & DevOps",
+  testing: "Testing",
+  other: "Other",
+};
 
 export default function Results() {
   const { id } = useParams<{ id: string }>();
@@ -38,7 +58,7 @@ export default function Results() {
 
   const copyText = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
-    toast({ title: `${label} copied to clipboard` });
+    toast({ title: `${label} copied`, description: text.slice(0, 80) + "..." });
   };
 
   const planText = entry.plan7Days.map(d => `${d.day}: ${d.focus}\n${d.tasks.map(t => `  - ${t}`).join("\n")}`).join("\n\n");
@@ -58,9 +78,13 @@ export default function Results() {
 
   const weakSkills = allSkills.filter(s => entry.skillConfidenceMap[s] === "practice").slice(0, 3);
 
-  // Circular score display
   const r = 54, c = 2 * Math.PI * r;
   const offset = c - (Math.max(0, Math.min(100, entry.finalScore)) / 100) * c;
+
+  // Group skills by category
+  const skillCategories = Object.entries(entry.extractedSkills)
+    .filter(([_, skills]) => (skills as string[]).length > 0)
+    .map(([key, skills]) => ({ key, label: CATEGORY_LABELS[key] || key, skills: skills as string[], color: CATEGORY_COLORS[key] }));
 
   return (
     <div className="max-w-3xl space-y-6">
@@ -80,41 +104,46 @@ export default function Results() {
         </div>
       </div>
 
-      {/* Skills */}
-      <Card className="shadow-none border border-border">
+      {/* Skills by Category */}
+      <Card className="card-premium">
         <CardHeader><CardTitle className="text-lg">Extracted Skills</CardTitle></CardHeader>
-        <CardContent>
-          <p className="text-xs text-muted-foreground mb-3">Click a skill to toggle between "I know this" and "Need practice"</p>
-          <div className="flex flex-wrap gap-2">
-            {allSkills.map(skill => (
-              <Badge
-                key={skill}
-                variant={entry.skillConfidenceMap[skill] === "know" ? "default" : "outline"}
-                className="cursor-pointer select-none transition-colors duration-150"
-                onClick={() => toggleSkill(skill)}
-              >
-                {skill}
-                <span className="ml-1 text-[10px] opacity-70">
-                  {entry.skillConfidenceMap[skill] === "know" ? "✓" : "?"}
-                </span>
-              </Badge>
-            ))}
-          </div>
+        <CardContent className="space-y-4">
+          <p className="text-xs text-muted-foreground mb-1">Click a skill to toggle between "I know this" and "Need practice"</p>
+          {skillCategories.map(cat => (
+            <div key={cat.key}>
+              <p className={`text-xs font-semibold uppercase tracking-wider mb-2 ${cat.color}`}>{cat.label}</p>
+              <div className="flex flex-wrap gap-2">
+                {cat.skills.map(skill => (
+                  <Badge
+                    key={skill}
+                    variant={entry.skillConfidenceMap[skill] === "know" ? "default" : "outline"}
+                    className="cursor-pointer select-none transition-colors duration-150 gap-1"
+                    onClick={() => toggleSkill(skill)}
+                  >
+                    {entry.skillConfidenceMap[skill] === "know"
+                      ? <CheckCircle className="h-3 w-3 text-success" />
+                      : <HelpCircle className="h-3 w-3 text-warning" />}
+                    {skill}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          ))}
         </CardContent>
       </Card>
 
       {/* Company Intel */}
       {entry.companyIntel && (
-        <Card className="shadow-none border border-border">
+        <Card className="card-premium">
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
-              <Building2 className="h-4 w-4" /> Company Intel
+              <Building2 className="h-4 w-4 text-info" /> Company Intel
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm">
             <div className="grid grid-cols-2 gap-4">
               <div><span className="text-muted-foreground">Industry:</span> {entry.companyIntel.industry}</div>
-              <div><span className="text-muted-foreground">Size:</span> {entry.companyIntel.sizeCategory}</div>
+              <div><span className="text-muted-foreground">Size:</span> <Badge variant="secondary" className="text-xs">{entry.companyIntel.sizeCategory}</Badge></div>
             </div>
             <div><span className="text-muted-foreground">Hiring Focus:</span> {entry.companyIntel.hiringFocus}</div>
             <p className="text-xs text-muted-foreground italic mt-2">Demo Mode: Company intel generated heuristically.</p>
@@ -123,7 +152,7 @@ export default function Results() {
       )}
 
       {/* Round Mapping */}
-      <Card className="shadow-none border border-border">
+      <Card className="card-premium">
         <CardHeader><CardTitle className="text-lg">Interview Round Flow</CardTitle></CardHeader>
         <CardContent>
           <div className="relative pl-6 space-y-6">
@@ -145,7 +174,7 @@ export default function Results() {
       </Card>
 
       {/* Checklist */}
-      <Card className="shadow-none border border-border">
+      <Card className="card-premium">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg">Preparation Checklist</CardTitle>
           <Button variant="ghost" size="sm" onClick={() => copyText(checklistText, "Checklist")}><Copy className="h-3 w-3 mr-1" />Copy</Button>
@@ -153,17 +182,18 @@ export default function Results() {
         <CardContent className="space-y-4">
           {entry.checklist.map((round, i) => (
             <div key={i}>
-              <h4 className="font-medium text-sm mb-2">{round.roundTitle}</h4>
+              <h4 className="font-medium text-sm mb-2 text-primary">{round.roundTitle}</h4>
               <ul className="space-y-1 text-sm text-muted-foreground">
                 {round.items.map((item, j) => <li key={j} className="flex gap-2"><span>□</span>{item}</li>)}
               </ul>
+              {i < entry.checklist.length - 1 && <div className="mt-3 h-px bg-border" />}
             </div>
           ))}
         </CardContent>
       </Card>
 
       {/* 7-Day Plan */}
-      <Card className="shadow-none border border-border">
+      <Card className="card-premium">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg">7-Day Study Plan</CardTitle>
           <Button variant="ghost" size="sm" onClick={() => copyText(planText, "7-day plan")}><Copy className="h-3 w-3 mr-1" />Copy</Button>
@@ -171,7 +201,7 @@ export default function Results() {
         <CardContent className="space-y-4">
           {entry.plan7Days.map((day, i) => (
             <div key={i}>
-              <h4 className="font-medium text-sm">{day.day} — {day.focus}</h4>
+              <h4 className="font-medium text-sm">{day.day} — <span className="text-info">{day.focus}</span></h4>
               <ul className="mt-1 space-y-1 text-sm text-muted-foreground">
                 {day.tasks.map((t, j) => <li key={j}>• {t}</li>)}
               </ul>
@@ -181,7 +211,7 @@ export default function Results() {
       </Card>
 
       {/* Questions */}
-      <Card className="shadow-none border border-border">
+      <Card className="card-premium">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg">Likely Interview Questions</CardTitle>
           <Button variant="ghost" size="sm" onClick={() => copyText(questionsText, "Questions")}><Copy className="h-3 w-3 mr-1" />Copy</Button>
@@ -199,14 +229,14 @@ export default function Results() {
       </Button>
 
       {/* Action Next */}
-      <Card className="shadow-none border border-primary/20 bg-accent/50">
+      <Card className="card-premium border-l-4 border-l-primary bg-accent/50">
         <CardHeader><CardTitle className="text-lg">What to Do Next</CardTitle></CardHeader>
         <CardContent className="text-sm space-y-2">
           {weakSkills.length > 0 ? (
             <>
               <p className="text-muted-foreground">Your top weak areas:</p>
               <div className="flex flex-wrap gap-2">
-                {weakSkills.map(s => <Badge key={s} variant="outline">{s}</Badge>)}
+                {weakSkills.map(s => <Badge key={s} variant="outline" className="border-warning/40 text-warning">{s}</Badge>)}
               </div>
               <p className="font-medium mt-2">Start Day 1 plan now.</p>
             </>

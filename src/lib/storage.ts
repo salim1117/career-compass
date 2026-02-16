@@ -5,12 +5,20 @@ const CHECKLIST_KEY = "prp_test_checklist";
 const PROOF_KEY = "prp_final_submission";
 const STEPS_KEY = "prp_steps_completed";
 
+let corruptedWarningShown = false;
+
 export function getHistory(): AnalysisEntry[] {
   try {
     const raw = localStorage.getItem(HISTORY_KEY);
     if (!raw) return [];
     const entries = JSON.parse(raw) as AnalysisEntry[];
-    return entries.filter(e => e && e.id && e.jdText && e.extractedSkills);
+    const valid = entries.filter(e => e && e.id && e.jdText && e.extractedSkills);
+    if (valid.length < entries.length && !corruptedWarningShown) {
+      corruptedWarningShown = true;
+      // Dispatch a custom event so UI can show a toast
+      window.dispatchEvent(new CustomEvent("prp:corrupted-entry", { detail: { skipped: entries.length - valid.length } }));
+    }
+    return valid;
   } catch {
     return [];
   }
@@ -21,6 +29,11 @@ export function saveToHistory(entry: AnalysisEntry): void {
   const idx = history.findIndex(h => h.id === entry.id);
   if (idx >= 0) history[idx] = entry;
   else history.unshift(entry);
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+}
+
+export function deleteFromHistory(id: string): void {
+  const history = getHistory().filter(e => e.id !== id);
   localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
 }
 

@@ -10,7 +10,7 @@ export default function ProfilePage() {
       <p className="text-muted-foreground mb-8">Your preparation journey at a glance.</p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Card className="shadow-none border border-border sm:col-span-2">
+        <Card className="card-premium sm:col-span-2 border-l-4 border-l-primary">
           <CardContent className="py-6 flex items-center gap-4">
             <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
               <User className="h-8 w-8 text-primary" />
@@ -23,7 +23,7 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
 
-        <Card className="shadow-none border border-border">
+        <Card className="card-premium border-l-4 border-l-info">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-sans flex items-center gap-2">
               <Target className="h-4 w-4 text-info" /> Goals
@@ -45,7 +45,7 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
 
-        <Card className="shadow-none border border-border">
+        <Card className="card-premium border-l-4 border-l-success">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-sans flex items-center gap-2">
               <TrendingUp className="h-4 w-4 text-success" /> Stats
@@ -58,7 +58,7 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
 
-        <Card className="shadow-none border border-border sm:col-span-2">
+        <Card className="card-premium sm:col-span-2 border-l-4 border-l-highlight">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-sans flex items-center gap-2">
               <Calendar className="h-4 w-4 text-highlight" /> Activity

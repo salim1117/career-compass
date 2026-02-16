@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from "recharts";
+import { FileText, History, Sparkles } from "lucide-react";
 
 const radarData = [
   { skill: "DSA", value: 75 },
@@ -42,21 +44,45 @@ function CircularProgress({ value, max = 100 }: { value: number; max?: number })
 }
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+
   return (
     <div>
+      {/* Welcome Banner */}
+      <Card className="card-premium mb-6 border-l-4 border-l-primary">
+        <CardContent className="py-5 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+              <Sparkles className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <h2 className="font-serif text-lg font-bold">Welcome back!</h2>
+              <p className="text-sm text-muted-foreground">Continue your placement prep journey.</p>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <Button size="sm" variant="outline" onClick={() => navigate("/analyze")} className="gap-1.5">
+              <FileText className="h-3.5 w-3.5" /> Analyze a JD
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => navigate("/history")} className="gap-1.5">
+              <History className="h-3.5 w-3.5" /> View History
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
       <h1 className="font-serif text-3xl font-bold mb-2">Dashboard</h1>
       <p className="text-muted-foreground mb-8">Your placement preparation at a glance.</p>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Overall Readiness */}
-        <Card className="shadow-none border border-border">
+        <Card className="card-premium bg-gradient-to-br from-card to-primary/[0.02]">
           <CardHeader><CardTitle className="text-lg">Overall Readiness</CardTitle></CardHeader>
           <CardContent><CircularProgress value={72} /></CardContent>
         </Card>
 
-
         {/* Skill Breakdown */}
-        <Card className="shadow-none border border-border">
+        <Card className="card-premium bg-gradient-to-br from-card to-info/[0.02]">
           <CardHeader><CardTitle className="text-lg">Skill Breakdown</CardTitle></CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={220}>
@@ -64,14 +90,14 @@ export default function Dashboard() {
                 <PolarGrid stroke="hsl(var(--border))" />
                 <PolarAngleAxis dataKey="skill" tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} />
                 <PolarRadiusAxis angle={90} domain={[0, 100]} tick={false} axisLine={false} />
-                <Radar dataKey="value" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" fillOpacity={0.15} />
+                <Radar dataKey="value" stroke="hsl(var(--info))" fill="hsl(var(--info))" fillOpacity={0.15} />
               </RadarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
         {/* Continue Practice */}
-        <Card className="shadow-none border border-border">
+        <Card className="card-premium bg-gradient-to-br from-card to-highlight/[0.02]">
           <CardHeader><CardTitle className="text-lg flex items-center gap-2"><span className="inline-block w-2 h-2 rounded-full bg-highlight" /> Continue Practice</CardTitle></CardHeader>
           <CardContent className="space-y-4">
             <p className="font-medium">Dynamic Programming</p>
@@ -84,7 +110,7 @@ export default function Dashboard() {
         </Card>
 
         {/* Weekly Goals */}
-        <Card className="shadow-none border border-border">
+        <Card className="card-premium bg-gradient-to-br from-card to-success/[0.02]">
           <CardHeader><CardTitle className="text-lg flex items-center gap-2"><span className="inline-block w-2 h-2 rounded-full bg-success" /> Weekly Goals</CardTitle></CardHeader>
           <CardContent className="space-y-4">
             <div>
@@ -106,7 +132,7 @@ export default function Dashboard() {
         </Card>
 
         {/* Upcoming Assessments */}
-        <Card className="shadow-none border border-border lg:col-span-2">
+        <Card className="card-premium lg:col-span-2 bg-gradient-to-br from-card to-warning/[0.02]">
           <CardHeader><CardTitle className="text-lg flex items-center gap-2"><span className="inline-block w-2 h-2 rounded-full bg-info" /> Upcoming Assessments</CardTitle></CardHeader>
           <CardContent>
             <ul className="space-y-3">
